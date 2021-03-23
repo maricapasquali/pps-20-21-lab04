@@ -8,7 +8,31 @@ trait Complex {
 }
 
 object Complex {
-  def apply(re:Double, im:Double):Complex = ??? // Fill here
+  def apply(re:Double, im:Double):Complex =
+    //new ComplexImpl(re, im)
+    ComplexImpl2(re, im)
+
+  // implementation with class
+  private class ComplexImpl(private val real: Double, private val imaginary: Double) extends Complex{
+    override def re: Double = real
+
+    override def im: Double = imaginary
+
+    override def +(c: Complex): Complex = new ComplexImpl(this.re + c.re, this.im + c.im)
+
+    override def *(c: Complex): Complex = new ComplexImpl(this.re * c.re - this.im * c.im, this.im * c.re + this.re * c.im)
+  }
+
+  // implementation with case class
+  private case class ComplexImpl2(private val real: Double, private val imaginary: Double) extends Complex {
+    override def re: Double = real
+
+    override def im: Double = imaginary
+
+    override def +(c: Complex): Complex = ComplexImpl2(this.re + c.re, this.im + c.im)
+
+    override def *(c: Complex): Complex = ComplexImpl2(this.re * c.re - this.im * c.im, this.im * c.re + this.re * c.im)
+  }
 }
 
 object TryComplex extends App {
