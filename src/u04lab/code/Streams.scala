@@ -18,6 +18,11 @@ object Streams extends App {
       Cons(() => head, () => tail)
     }
 
+    def of[A](lst: List[A]): Stream[A] = lst match {
+      case List.Cons(h, t) => cons(h, of(t))
+      case List.Nil() => Empty()
+    }
+
     def toList[A](stream: Stream[A]): List[A] = stream match {
       case Cons(h,t) => List.Cons(h(), toList(t()))
       case _ => List.Nil()
