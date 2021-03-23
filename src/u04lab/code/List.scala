@@ -65,11 +65,14 @@ object Lists extends App {
     def foldRight[A,B](l: List[A])(acc: B)(f: (A,B)=>B): B =
       foldRightViaFoldleft(l)(acc)(f)
 
-    def filterByFlatmap[A](l: List[A])(f: A => Boolean): List[A] = ???
+    def filterByFlatmap[A](l: List[A])(f: A => Boolean): List[A] = flatMap(l) {
+      case a if f(a) => Cons(a, Nil())
+      case _ => Nil()
+    }
 
-    def appendByFold[A](l1: List[A], l2: List[A]): List[A] = ???
+    def appendByFold[A](l1: List[A], l2: List[A]): List[A] = foldLeft(l2)(l1)((x1, x2) => append(x1, Cons(x2, Nil())))
 
-    def length(l: List[_]): Int = ???
+    def length(l: List[_]): Int = foldLeft(l)(0)((acc, _)=>acc+1)
 
     @tailrec
     def contains[A](l: List[A])(v: A): Boolean = l match {
@@ -77,6 +80,22 @@ object Lists extends App {
       case Cons(_, t) => contains(t)(v)
       case Nil() => false
     }
+
+    def distinct[A](list: List[A]): List[A] = {
+      @tailrec
+      def _distinct(lst: List[A])(n: A)(acc: List[A]): List[A] = (lst, n) match {
+        case (Cons(h, t), x) if !List.contains(acc)(x) => _distinct(t)(h)(append(acc,  Cons(x, Nil())))
+        case (Cons(h, t), _) => _distinct(t)(h)(acc)
+        case (Nil(), x) if !List.contains(acc)(x) => append(acc, Cons(x, Nil()))
+        case (Nil(), _) => acc
+      }
+
+      list match {
+        case Cons(head, tail) => _distinct(tail)(head)(Nil())
+        case Nil() => Nil()
+      }
+    }
+
   }
 
   // Note "List." qualification

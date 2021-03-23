@@ -25,6 +25,12 @@ object Optionals extends App {
       case Some(a) => f(a)
       case _ => None()
     }
+
+    def toScalaOption[A](oo: Option[A]): scala.Option[A] = oo match {
+      case Option.Some(a) => scala.Option(a)
+      case Option.None() => scala.Option.empty
+    }
+
   }
 
   import Option._
