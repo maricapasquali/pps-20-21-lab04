@@ -13,10 +13,7 @@ object Complex {
     ComplexImpl2(re, im)
 
   // implementation with class
-  private class ComplexImpl(private val real: Double, private val imaginary: Double) extends Complex{
-    override def re: Double = real
-
-    override def im: Double = imaginary
+  private class ComplexImpl(override val re: Double, override val im: Double) extends Complex{
 
     override def +(c: Complex): Complex = new ComplexImpl(this.re + c.re, this.im + c.im)
 
@@ -24,10 +21,7 @@ object Complex {
   }
 
   // implementation with case class
-  private case class ComplexImpl2(private val real: Double, private val imaginary: Double) extends Complex {
-    override def re: Double = real
-
-    override def im: Double = imaginary
+  private case class ComplexImpl2(re: Double, im: Double) extends Complex {
 
     override def +(c: Complex): Complex = ComplexImpl2(this.re + c.re, this.im + c.im)
 
