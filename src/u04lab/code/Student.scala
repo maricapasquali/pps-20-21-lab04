@@ -19,21 +19,17 @@ trait Course {
 object Student {
   def apply(name: String, year: Int = 2017): Student = new StudentImpl(name, year)
 
-  private class StudentImpl(private var _name: String, private var _year: Int) extends Student{
+  private class StudentImpl(override val name: String, override val year: Int) extends Student{
 
     private var _courses: List[Course] = Nil()
 
-    override def name: String = _name
-
-    override def year: Int = _year
-
-    private def enrolling(course: Course): Unit = _courses = append(Cons(course, List.Nil()), _courses)
+    private def enrolling(course: Course): Unit = _courses = Cons(course, _courses)
 
     override def enrolling(courses: Course*): Unit = courses foreach enrolling
 
-    override def courses: List[String] = map(_courses)(course => course.name)
+    override def courses: List[String] = map(_courses)(_.name)
 
-    override def hasTeacher(teacher: String): Boolean = contains(map(_courses)(course => course.teacher))(teacher)
+    override def hasTeacher(teacher: String): Boolean = contains(map(_courses)(_.teacher))(teacher)
   }
 }
 
