@@ -38,7 +38,7 @@ class PowerIteratorsFactoryImpl extends PowerIteratorsFactory {
 
     override def allSoFar(): List[A] = List.reverse(pastList)
 
-    override def reversed(): PowerIterator[A] = fromStream(Stream.of(List.reverse(pastList)))
+    override def reversed(): PowerIterator[A] = fromStream(Stream.of(pastList))
   }
 
   override def incremental(start: Int, successive: Int => Int): PowerIterator[Int] = fromStream(Stream.iterate(start)(successive))
