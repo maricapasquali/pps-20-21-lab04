@@ -30,13 +30,13 @@ class PowerIteratorsFactoryImpl extends PowerIteratorsFactory {
     override def next(): Option[A] = stream match {
       case Stream.Cons(h, t) =>
         val next = h();
-        pastList = List.append(pastList, List.Cons(next, List.Nil()))
+        pastList = List.Cons(next, pastList)
         stream = t()
         Option.Some(next)
       case _ => Option.None()
     }
 
-    override def allSoFar(): List[A] = pastList
+    override def allSoFar(): List[A] = List.reverse(pastList)
 
     override def reversed(): PowerIterator[A] = fromStream(Stream.of(List.reverse(pastList)))
   }
