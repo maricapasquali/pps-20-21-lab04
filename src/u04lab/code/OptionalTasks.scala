@@ -24,11 +24,15 @@ object ListFactory {
  * */
 object sameTeacher {
   def unapply(courses: List[Course]): scala.Option[String] = {
-    val dTeachers = distinct(map(courses)(c => c.teacher))
-    val len = length(dTeachers)
-    (dTeachers, len) match {
-      case (Cons(head, _), 1) => toScalaOption(Some(head))
-      case (_, _) => toScalaOption(None())
+    @scala.annotation.tailrec
+    def _unapply(cs: List[Course])(t: String): scala.Option[String]  = cs match {
+      case Cons(head, tail) if head.teacher == t => _unapply(tail)(t)
+      case Nil() => toScalaOption(Some(t))
+      case _ => toScalaOption(None())
+    }
+    courses match {
+      case Cons(head, tail) => _unapply(tail)(head.teacher)
+      case Nil() => toScalaOption(None())
     }
   }
 }

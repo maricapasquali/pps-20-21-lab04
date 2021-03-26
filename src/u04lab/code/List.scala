@@ -70,7 +70,7 @@ object Lists extends App {
       case _ => Nil()
     }
 
-    def appendByFold[A](l1: List[A], l2: List[A]): List[A] = foldLeft(l2)(l1)((x1, x2) => append(x1, Cons(x2, Nil())))
+    def appendByFold[A](l1: List[A], l2: List[A]): List[A] = foldRight(l1)(l2)(Cons(_, _))
 
     def length(l: List[_]): Int = foldLeft(l)(0)((acc, _)=>acc+1)
 
@@ -79,21 +79,6 @@ object Lists extends App {
       case Cons(h, _) if h == v => true
       case Cons(_, t) => contains(t)(v)
       case Nil() => false
-    }
-
-    def distinct[A](list: List[A]): List[A] = {
-      @tailrec
-      def _distinct(lst: List[A])(n: A)(acc: List[A]): List[A] = (lst, n) match {
-        case (Cons(h, t), x) if !List.contains(acc)(x) => _distinct(t)(h)(append(acc,  Cons(x, Nil())))
-        case (Cons(h, t), _) => _distinct(t)(h)(acc)
-        case (Nil(), x) if !List.contains(acc)(x) => append(acc, Cons(x, Nil()))
-        case (Nil(), _) => acc
-      }
-
-      list match {
-        case Cons(head, tail) => _distinct(tail)(head)(Nil())
-        case Nil() => Nil()
-      }
     }
 
   }

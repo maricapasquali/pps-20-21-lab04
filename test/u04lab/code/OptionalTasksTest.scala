@@ -2,6 +2,7 @@ package u04lab.code
 
 import org.junit.jupiter.api.Assertions._
 import org.junit.jupiter.api.Test
+import u04lab.code.Lists.List
 import u04lab.code.Lists.List._
 
 class OptionalTasksTest {
@@ -17,6 +18,9 @@ class OptionalTasksTest {
 
   @Test
   def testExtractor(): Unit ={
+    val debugSameTeacher: (List[Course], String) => String = (c, t) => s"$c have same teacher $t"
+    val debugDifferentTeacher: List[Course] => String = c => s"$c have different teachers"
+
     val c1 = Course("PPS","Viroli")
     val c2 = Course("PCD","Ricci")
     val c3 = Course("SDR","D'Angelo")
@@ -25,13 +29,20 @@ class OptionalTasksTest {
     var courses = ListFactory(c1 ,c2 ,c3, c4)
 
     courses match {
-      case sameTeacher(_) => assert(false)
-      case _ => assert(true); println(s"$courses have different teachers")
+      case sameTeacher(t) => assert(assertion = false, debugSameTeacher(courses, t))
+      case _ => assert(true); println(debugDifferentTeacher(courses))
     }
 
     courses = ListFactory(c1 , c4)
     courses match {
-      case sameTeacher(t) => assertEquals("Viroli", s"$t"); println (s"$courses have same teacher $t");
+      case sameTeacher(t) => assertEquals("Viroli", t); println(debugSameTeacher(courses, t));
+      case _ => assert(assertion = false, debugDifferentTeacher(courses))
+    }
+
+    courses = Nil()
+    courses match {
+      case sameTeacher(_) => assert(assertion = false, s"courses NOT empty")
+      case _ => assert(true); println(s"courses is empty")
     }
   }
 
